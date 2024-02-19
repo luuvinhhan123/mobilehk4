@@ -18,8 +18,7 @@ class _SignFormState extends State<SignForm> {
   String? password;
   bool? remember = false;
   final List<String?> errors = [];
-  String?
-      loginErrorMessage; // Thêm biến để lưu trữ thông báo lỗi khi đăng nhập thất bại từ API
+  String? loginErrorMessage;
 
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -48,7 +47,9 @@ class _SignFormState extends State<SignForm> {
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kEmailNullError);
-              } else if (emailValidatorRegExp.hasMatch(value)) {
+              }
+              // Kiểm tra định dạng email chỉ khi người dùng nhập một giá trị hợp lệ
+              if (emailValidatorRegExp.hasMatch(value)) {
                 removeError(error: kInvalidEmailError);
               }
               email = value;
@@ -104,7 +105,8 @@ class _SignFormState extends State<SignForm> {
                 activeColor: kPrimaryColor,
                 onChanged: (value) {
                   setState(() {
-                    remember = value;
+                    remember =
+                        value; // Cập nhật lại giá trị của biến remember khi checkbox thay đổi trạng thái
                   });
                 },
               ),
