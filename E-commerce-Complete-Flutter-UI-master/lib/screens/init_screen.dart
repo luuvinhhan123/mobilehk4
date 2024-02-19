@@ -10,7 +10,7 @@ import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 const Color inActiveIconColor = Color(0xFFB6B6B6);
 
 class InitScreen extends StatefulWidget {
-  const InitScreen({Key? key}) : super(key: key); 
+  const InitScreen({Key? key}) : super(key: key);
 
   static String routeName = "/";
 
@@ -20,23 +20,33 @@ class InitScreen extends StatefulWidget {
 
 class _InitScreenState extends State<InitScreen> {
   int currentSelectedIndex = 0;
-  bool isLoggedIn = false; // Trạng thái đăng nhập
+  bool isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: currentSelectedIndex,
+        // children: [
+        //   const HomeScreen(),
+        //   if (currentSelectedIndex == 1 || currentSelectedIndex == 3)
+        //     isLoggedIn ? const CategoriesScreen() : const SignInScreen()
+        //   else
+        //     const FavoriteScreen(),
+        //   const ProfileScreen(),
+        // ],
         children: [
           const HomeScreen(),
-          const FavoriteScreen(),
-          isLoggedIn ? const CategoriesScreen() : const SignInScreen(), // Kiểm tra đăng nhập
-          const ProfileScreen(),
+          if (currentSelectedIndex == 1)
+            isLoggedIn ? const FavoriteScreen() : const SignInScreen()
+          else if (currentSelectedIndex == 3)
+            isLoggedIn ? const ProfileScreen() : const SignInScreen()
+          else
+            const CategoriesScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          // Nếu trạng thái là chưa đăng nhập và người dùng chọn một mục không phải là Home
           if (!isLoggedIn && index != 0) {
             Navigator.push(
               context,

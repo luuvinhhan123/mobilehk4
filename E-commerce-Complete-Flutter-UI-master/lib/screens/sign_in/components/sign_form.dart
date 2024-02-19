@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-
-import '../../../components/custom_surfix_icon.dart';
-import '../../../components/form_error.dart';
-import '../../../constants.dart';
-import '../../../helper/keyboard.dart';
-import '../../forgot_password/forgot_password_screen.dart';
-import '../../login_success/login_success_screen.dart';
+import 'package:shop_app/screens/forgot_password/forgot_password_screen.dart';
+import 'package:shop_app/screens/login_success/login_success_screen.dart';
+import 'package:shop_app/services/auth_service.dart';
+import 'package:shop_app/components/form_error.dart';
+import 'package:shop_app/constants.dart';
 
 class SignForm extends StatefulWidget {
-  const SignForm({super.key});
+  const SignForm({Key? key}) : super(key: key);
 
   @override
   _SignFormState createState() => _SignFormState();
 }
 
 class _SignFormState extends State<SignForm> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
   bool? remember = false;
   final List<String?> errors = [];
+  String?
+      loginErrorMessage; // Thêm biến để lưu trữ thông báo lỗi khi đăng nhập thất bại từ API
 
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -45,14 +45,13 @@ class _SignFormState extends State<SignForm> {
         children: [
           TextFormField(
             keyboardType: TextInputType.emailAddress,
-            onSaved: (newValue) => email = newValue,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kEmailNullError);
               } else if (emailValidatorRegExp.hasMatch(value)) {
                 removeError(error: kInvalidEmailError);
               }
-              return;
+              email = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
@@ -67,23 +66,19 @@ class _SignFormState extends State<SignForm> {
             decoration: const InputDecoration(
               labelText: "Email",
               hintText: "Enter your email",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
             ),
           ),
           const SizedBox(height: 20),
           TextFormField(
             obscureText: true,
-            onSaved: (newValue) => password = newValue,
             onChanged: (value) {
               if (value.isNotEmpty) {
                 removeError(error: kPassNullError);
               } else if (value.length >= 8) {
                 removeError(error: kShortPassError);
               }
-              return;
+              password = value;
             },
             validator: (value) {
               if (value!.isEmpty) {
@@ -98,10 +93,7 @@ class _SignFormState extends State<SignForm> {
             decoration: const InputDecoration(
               labelText: "Password",
               hintText: "Enter your password",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
             ),
           ),
           const SizedBox(height: 20),
@@ -116,30 +108,50 @@ class _SignFormState extends State<SignForm> {
                   });
                 },
               ),
-              const Text("Remember me"),
-              const Spacer(),
+              Text("Remember me"),
+              Spacer(),
               GestureDetector(
                 onTap: () => Navigator.pushNamed(
-                    context, ForgotPasswordScreen.routeName),
+                  context,
+                  ForgotPasswordScreen.routeName,
+                ),
                 child: const Text(
                   "Forgot Password",
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
-              )
+              ),
             ],
           ),
           FormError(errors: errors),
+          if (loginErrorMessage !=
+              null) // Hiển thị thông báo lỗi khi đăng nhập thất bại từ API
+            Text(
+              loginErrorMessage!,
+              style: TextStyle(color: Colors.red),
+            ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                try {
+                  final authService = AuthService();
+                  final result = await authService.login(
+                    email!,
+                    password!,
+                    remember ?? false,
+                  );
+                  Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                } catch (e) {
+                  print('Error during login: $e');
+                  setState(() {
+                    loginErrorMessage =
+                        'Failed to login. Invalid email or password, try again!';
+                  });
+                }
               }
             },
-            child: const Text("Continue"),
+            child: Text("Sign In"),
           ),
         ],
       ),
