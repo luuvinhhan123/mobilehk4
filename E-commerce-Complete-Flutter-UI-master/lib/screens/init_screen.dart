@@ -6,6 +6,7 @@ import 'package:shop_app/screens/favorite/favorite_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+import 'package:shop_app/services/auth_service.dart';
 
 const Color inActiveIconColor = Color(0xFFB6B6B6);
 
@@ -23,31 +24,35 @@ class _InitScreenState extends State<InitScreen> {
   bool isLoggedIn = false;
 
   @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  void checkLoginStatus() async {
+    final authService = AuthService(); // Khởi tạo AuthService
+    final loggedIn =
+        await authService.isLoggedIn(); // Kiểm tra trạng thái đăng nhập
+    setState(() {
+      isLoggedIn = loggedIn; // Cập nhật giá trị của biến isLoggedIn
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: currentSelectedIndex,
-        // children: [
-        //   const HomeScreen(),
-        //   if (currentSelectedIndex == 1 || currentSelectedIndex == 3)
-        //     isLoggedIn ? const CategoriesScreen() : const SignInScreen()
-        //   else
-        //     const FavoriteScreen(),
-        //   const ProfileScreen(),
-        // ],
         children: [
           const HomeScreen(),
-          if (currentSelectedIndex == 1)
-            isLoggedIn ? const FavoriteScreen() : const SignInScreen()
-          else if (currentSelectedIndex == 3)
-            isLoggedIn ? const ProfileScreen() : const SignInScreen()
-          else
-            const CategoriesScreen(),
+          if (isLoggedIn) const FavoriteScreen() else const SignInScreen(),
+          const CategoriesScreen(),
+          if (isLoggedIn) const ProfileScreen() else const SignInScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
-          if (!isLoggedIn && index != 0) {
+          if (!isLoggedIn && index != 0 && index != 2) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const SignInScreen()),

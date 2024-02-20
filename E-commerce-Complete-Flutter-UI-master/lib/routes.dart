@@ -1,6 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:shop_app/screens/address/address_screen.dart';
+import 'package:shop_app/screens/address/components/addNewAddess_screen.dart';
 import 'package:shop_app/screens/categories/categories_screen.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
+import 'package:shop_app/screens/profile/helpCenter_screen.dart';
+import 'package:shop_app/screens/profile/myAccount_screen.dart';
 
 import 'screens/cart/cart_screen.dart';
 import 'screens/complete_profile/complete_profile_screen.dart';
@@ -32,4 +36,8 @@ final Map<String, WidgetBuilder> routes = {
   CategoriesScreen.routeName: (context) => const CategoriesScreen(),
   CartScreen.routeName: (context) => const CartScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
+  HelpCenterScreen.routeName: (context) => HelpCenterScreen(),
+  //MyAccountScreen.routeName: (context) => MyAccountScreen(),
+  AddScreen.routeName:(context) => AddScreen(),
+  AddNewAddressScreen.routeName:(context) => AddNewAddressScreen(),
 };

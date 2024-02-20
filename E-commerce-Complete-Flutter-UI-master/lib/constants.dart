@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-const baseUrl = "http://192.168.1.18:8080";
+const baseUrl = "http://172.16.1.172:8080";
 
 const kPrimaryColor = Color(0xFFFF7643);
 const kPrimaryLightColor = Color(0xFFFFECDF);

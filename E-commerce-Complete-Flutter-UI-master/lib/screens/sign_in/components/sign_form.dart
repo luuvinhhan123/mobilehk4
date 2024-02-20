@@ -16,7 +16,7 @@ class _SignFormState extends State<SignForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  bool? remember = false;
+  bool remember = false;
   final List<String?> errors = [];
   String? loginErrorMessage;
 
@@ -48,7 +48,6 @@ class _SignFormState extends State<SignForm> {
               if (value.isNotEmpty) {
                 removeError(error: kEmailNullError);
               }
-              // Kiểm tra định dạng email chỉ khi người dùng nhập một giá trị hợp lệ
               if (emailValidatorRegExp.hasMatch(value)) {
                 removeError(error: kInvalidEmailError);
               }
@@ -105,8 +104,7 @@ class _SignFormState extends State<SignForm> {
                 activeColor: kPrimaryColor,
                 onChanged: (value) {
                   setState(() {
-                    remember =
-                        value; // Cập nhật lại giá trị của biến remember khi checkbox thay đổi trạng thái
+                    remember = value ?? false; // Cập nhật giá trị remember
                   });
                 },
               ),
@@ -125,8 +123,7 @@ class _SignFormState extends State<SignForm> {
             ],
           ),
           FormError(errors: errors),
-          if (loginErrorMessage !=
-              null) // Hiển thị thông báo lỗi khi đăng nhập thất bại từ API
+          if (loginErrorMessage != null)
             Text(
               loginErrorMessage!,
               style: TextStyle(color: Colors.red),
@@ -138,11 +135,15 @@ class _SignFormState extends State<SignForm> {
                 _formKey.currentState!.save();
                 try {
                   final authService = AuthService();
-                  final result = await authService.login(
+                  final result = await authService.sendEmailAndPassword(
                     email!,
                     password!,
-                    remember ?? false,
                   );
+                  if (remember) {
+                    await authService.saveRememberMe(true);
+                  } else {
+                    await authService.saveRememberMe(false);
+                  }
                   Navigator.pushNamed(context, LoginSuccessScreen.routeName);
                 } catch (e) {
                   print('Error during login: $e');
