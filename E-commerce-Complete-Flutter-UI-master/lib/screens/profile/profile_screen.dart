@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             ProfileMenu(
-              text: "User Address",
+              text: "Shipping Addresses",
               icon: "assets/icons/Location point.svg",
               press: () {
                 // Khi chuyển đến trang khác, hiển thị nút back

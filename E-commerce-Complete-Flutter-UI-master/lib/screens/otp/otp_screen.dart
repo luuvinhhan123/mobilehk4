@@ -26,7 +26,7 @@ class OtpScreen extends StatelessWidget {
                   "OTP Verification",
                   style: headingStyle,
                 ),
-                const Text("We sent your code to +1 898 860 ***"),
+                const Text("We sent your code to mail"),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -43,15 +43,15 @@ class OtpScreen extends StatelessWidget {
                 ),
                 const OtpForm(),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    // OTP code resend
-                  },
-                  child: const Text(
-                    "Resend OTP Code",
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                )
+                // GestureDetector(
+                //   onTap: () {
+                //     // OTP code resend
+                //   },
+                //   child: const Text(
+                //     "Resend OTP Code",
+                //     style: TextStyle(decoration: TextDecoration.underline),
+                //   ),
+                // )
               ],
             ),
           ),

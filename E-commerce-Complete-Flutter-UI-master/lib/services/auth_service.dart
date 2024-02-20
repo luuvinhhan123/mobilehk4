@@ -14,7 +14,7 @@ class AuthService {
   Future<Map<String, dynamic>> sendEmailAndPassword(
       String email, String password) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/api/auth/login'),
+      Uri.parse('$baseUrl/api/v1/auth/'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

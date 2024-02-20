@@ -15,45 +15,48 @@ class AddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Addresses'),
+        title: Text('Shipping Addresses'),
       ),
+      backgroundColor: Colors.white, // Set background color to white
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
+            flex: 2,
             child: ListView.builder(
               itemCount: userAddresses.length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    userAddresses[index],
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        userAddresses[index],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      // Add any additional details or actions for each address
                     ),
                   ),
-                  // Add any additional details or actions for each address
                 );
               },
             ),
           ),
+          // Add New Address Button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                // Navigate to Add New Address Screen
                 Navigator.pushNamed(context, AddNewAddressScreen.routeName);
               },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(14),
-              ),
-              child: Text(
-                'Add New Address',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text("Add New Address"),
             ),
           ),
         ],

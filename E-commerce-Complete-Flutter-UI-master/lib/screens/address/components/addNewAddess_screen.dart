@@ -52,6 +52,13 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     }
   }
 
+  Future<void> fetchWards(String districtId) async {
+    final district = _districts.firstWhere((district) => district['Id'] == districtId);
+    setState(() {
+      _wards = district['Wards'];
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +72,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
         title: Text('Add New Address'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(horizontal: 16.0), // Khoảng lề trái và phải là 16.0
         child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -104,6 +111,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                           _selectedWard = '';
                           _wards = [];
                         });
+                        fetchWards(newValue.toString());
                       },
                       items: _districts.map((district) {
                         return DropdownMenuItem(
@@ -148,7 +156,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                       // Handle adding new address
                       print('New Address: Street: $_street, Ward: $_selectedWard, District: $_selectedDistrict, City: $_selectedCity');
                     },
-                    child: Text('Add New Address'),
+                    child: Text('Save'),
                   ),
                 ],
               ),
@@ -156,4 +164,3 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     );
   }
 }
-
